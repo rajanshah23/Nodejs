@@ -1,0 +1,22 @@
+# node modules (always ignore this)
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# environment variables (important for security)
+.env
+
+# operating system files
+.DS_Store
+Thumbs.db
+
+# editor-specific folders
+.vscode/
+.idea/
+
+# optional: ignore build output if any (not usually in EJS-only apps)
+dist/
+build/
