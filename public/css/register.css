@@ -1,0 +1,87 @@
+ 
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+    }
+
+    /* Navbar styles */
+    .navbar {
+      background: linear-gradient(to right, #4b6cb7, #182848);
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-bottom: 2px solid #ffcc00;
+    }
+
+    .navbar a {
+      float: left;
+      display: block;
+      color: #fff;
+      text-align: center;
+      padding: 16px 24px;
+      text-decoration: none;
+      font-size: 18px;
+      transition: background 0.3s ease;
+    }
+
+    .navbar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Form container */
+    .form-container {
+      background-color: #ffffff;
+      max-width: 400px;
+      margin: 70px auto;
+      padding: 30px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
+      transition: transform 0.3s;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    /* Apply to all inputs */
+    .form-container input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+    }
+
+    /* Specific field styles */
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container input[type="password"] {
+      border: 2px solid #ccc;
+    }
+
+    .form-container input[type="text"]:focus,
+    .form-container input[type="email"]:focus,
+    .form-container input[type="password"]:focus {
+      border-color: #4b6cb7;
+      outline: none;
+    }
+
+    /* Submit button */
+    .form-container input[type="submit"] {
+      background: linear-gradient(to right, #4b6cb7, #182848);
+      color: white;
+      border: none;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .form-container input[type="submit"]:hover {
+      background: linear-gradient(to right, #182848, #4b6cb7);
+    }
