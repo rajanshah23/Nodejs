@@ -7,13 +7,12 @@
     <link rel="stylesheet" href="/register.css" />
   </head>
   <body>
-
-<%- include("../components/navbar") %>
+    <%- include("../components/navbar") %>
 
     <!-- Form -->
     <div class="form-container">
       <h2>Register</h2>
-      <form>
+      <form action="/register" method="post">
         <input type="text" name="username" placeholder="Username" required />
         <input type="email" name="email" placeholder="Email" required />
         <input
