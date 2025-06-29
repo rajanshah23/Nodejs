@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VerifyOTP</title>
+   <link rel="stylesheet" href="./login.css">
+</head>
+<body>
+
+  <%- include("../components/navbar") %>
+
+  <!-- Form -->
+  <div class="form-container">
+    <h2>VerifyOTP</h2>
+    <form action="/verifyotp/<%- email %>" method="post">
+   
+      <input type="number" name="otp" placeholder="otp" required />
+      <input type="submit" value="Verify OTP" />
+      
+    </form>
+  </div>
+
+</body>
+</html>

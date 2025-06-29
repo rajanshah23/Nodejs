@@ -1,90 +1,47 @@
 const express = require("express");
-const { users } = require("./model/index");
 const app = express();
-
-// We can also do like this
-// const app=require("express")()
-
-require("./model/index");
+const { renderHomePage } = require("./controllers/authController");
+const cookieParser = require("cookie-parser");
 const PORT = 3000;
+const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
+app.use(express.urlencoded({ extended: true })); // for server side rendering use this
+app.use(express.json()); // client side rendering huda yo use garni(react,vue.....)
+app.use(cookieParser());
+require("./model/index");
+const authRoute = require("./routes/authRoute");
+const questionRoute = require("./routes/questionRoute");
+const answerRoute=require('./routes/answerRoute')
+const { isAuthenticated } = require("./middleware/IsAuthenticated");
 
+// mailey navbar ma user login xa van logout dekhauna paryo ane viceversa
+app.use(async (req, res, next) => {
+  const token = req.cookies.jwtToken;
+  try {
+    const verifiedResult = await promisify(jwt.verify)(token, "hahaha");
+    if (isAuthenticated) {
+      res.locals.isAuthenticated = true; // locals is  a global variable which is used to store the key value
+    } else {
+      res.locals.isAuthenticated = false;
+    }
+  } catch (error) {
+    res.locals.isAuthenticated = false;
+  }
+  next();
+});
 
-app.use(express.urlencoded({ extended: true })); //for server sid erendering use this
-app.use(express.json()); ///client side rendering huds yo use garni(react,vue.....)
-
-
-
-//templaing engine(Backend batai frontend render garna we use either(ejs,pug,handlebar,moustache))
+// templaing engine (Backend batai frontend render garna we use either(ejs,pug,handlebar,moustache))
 app.set("view engine", "ejs");
-
-app.get("/", (req, res) => {
-  res.render("home.ejs");
-});
-
-app.get("/register", (req, res) => {
-  res.render("auth/register");
-});
-
-app.post("/register", async(req, res) => {
-  //destructuring 
-  // const username=req.body.username// const email=req.body.email// const password=req.body.password
-  //or 
-  const {username,email,password}=req.body
-  await users.create({
-  email ,
-  username ,
-  password
-
- })
-res.send("Registered Successfully")
-});
+app.get("/", renderHomePage);
+app.use("/", authRoute);
+app.use("/", questionRoute);
+app.use("/answer",answerRoute)
 
 
 
-
-app.get("/login", (req, res) => {
- res.render("auth/login")
-});
-
-app.post("/login", async(req, res) => {
-const {email,password}=req.body
-await users.findOne({
-  email,password
-})
-res.send ("Login Successfully")
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.use(express.static("./storage"))
 app.use(express.static("public/css/"));
 
 app.listen(PORT, () => {
   console.log(`Server has startd at http://localhost:${PORT}`);
 });
-
-
-
-//rest api
-//reister-post
-
-
-
-
-
-
-//resful api

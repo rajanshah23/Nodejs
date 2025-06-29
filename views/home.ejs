@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home</title>
+  <link rel="stylesheet" href="/home.css" />
+  <link rel="stylesheet" href="./navbar.css">
 </head>
 <body>
-    <h1>This is Homepage</h1>
-  
+
+  <%- include("./components/navbar.ejs") %>
+
+  <div class="question-list">
+    <% data.forEach(item => { %>
+      <div class="question-card" onclick="window.location.href='/question/<%- item.id %>'">
+        <div class="question-title"><%- item.title %></div>
+        <div class="question-author"><i> Author:  <%= item.user.username %></i></div>
+      </div>
+    <% }) %>
+  </div>
+
 </body>
 </html>
