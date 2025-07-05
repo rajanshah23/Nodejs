@@ -10,7 +10,7 @@
 <body>
 
   <%- include("./components/navbar.ejs") %>
-
+<p style="color:green "><%- success %> </p>
   <div class="question-list">
     <% data.forEach(item => { %>
       <div class="question-card" onclick="window.location.href='/question/<%- item.id %>'">

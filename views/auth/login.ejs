@@ -8,10 +8,11 @@
   </head>
   <body>
     <%- include("../components/navbar") %>
-
-    <!-- Form -->
+      <p style="color:green"><%- success %></p>
+ 
     <div class="form-container">
       <h2>Login</h2>
+      <p style="color:red"><%- error %></p>
       <form action="/login" method="post">
         <input type="email" name="email" placeholder="Email" required />
         <input
