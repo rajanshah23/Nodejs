@@ -1,8 +1,13 @@
 body {
-font-family: sans-serif;
+  font-family: sans-serif;
   margin: 0;
   padding: 0;
   background: linear-gradient(to right, #e0eafc, #cfdef3);
+  background-image: url("https://imgs.search.brave.com/qoibsKFoDFFnGWeYU9_gAjdWqqZ9GXAUphpNWXedZIg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDMv/NzMyLzA4OC9zbWFs/bC9xdWVzdGlvbi1t/YXJrLXBhcnRpY2xl/LWFwcGVhci1zbG93/LWZsb2F0LWFuZC1m/YWRlZC13aXRoLWJ1/YmJsZXMtb24tdGhl/LWRhcmstYmx1ZS1i/YWNrZ3JvdW5kLWZy/ZWUtdmlkZW8uanBn");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
 }
 
 /* Navbar styles */
@@ -30,7 +35,7 @@ font-family: sans-serif;
 
 /* Form container */
 .form-container {
-  background-color: #ffffff;
+  background-color: #9696a3;
   max-width: 400px;
   margin: 70px auto;
   padding: 30px;

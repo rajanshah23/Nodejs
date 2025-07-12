@@ -6,8 +6,9 @@ const PORT = 3000;
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const session = require("express-session");
-const flash=require('connect-flash')
-
+const flash = require("connect-flash");
+require("dotenv").config();
+const socketio = require("socket.io");
 app.use(express.urlencoded({ extended: true })); // for server side rendering use this
 app.use(express.json()); // client side rendering huda yo use garni(react,vue.....)
 app.use(cookieParser());
@@ -18,16 +19,16 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(flash())
-
-
+app.use(flash());
 
 require("./model/index");
 const authRoute = require("./routes/authRoute");
 const questionRoute = require("./routes/questionRoute");
 const answerRoute = require("./routes/answerRoute");
-const { isAuthenticated } = require("./middleware/IsAuthenticated");
 const catchError = require("./utils/catchError");
+const { answers, sequelize } = require("./model/index");
+const { isAuthenticated } = require("./middleware/isAuthenticated");
+const { QueryTypes } = require("sequelize");
 
 // mailey navbar ma user login xa van logout dekhauna paryo ane viceversa
 app.use(async (req, res, next) => {
@@ -47,7 +48,7 @@ app.use(async (req, res, next) => {
 
 // templaing engine (Backend batai frontend render garna we use either(ejs,pug,handlebar,moustache))
 app.set("view engine", "ejs");
-app.get("/",catchError(renderHomePage));
+app.get("/",renderHomePage);
 app.use("/", authRoute);
 app.use("/", questionRoute);
 app.use("/answer", answerRoute);
@@ -55,6 +56,53 @@ app.use("/answer", answerRoute);
 app.use(express.static("./storage"));
 app.use(express.static("public/css/"));
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server has startd at http://localhost:${PORT}`);
+});
+
+const io = socketio(server, {
+  cors: {
+    origin: "*",
+  },
+});
+io.on("connection", (socket) => {
+  socket.on("like", async ({ answerId, cookie }) => {
+    const answer = await answers.findByPk(answerId);
+    if (answer && cookie) {
+      const decryptedResult = await promisify(jwt.verify)(cookie, "hahaha");
+      if (decryptedResult) {
+        const user = await sequelize.query(
+          `SELECT * FROM likes_${answerId} WHERE userId=${decryptedResult.id}`,
+          {
+            type: QueryTypes.SELECT,
+          }
+        );
+        if (user.length === 0) {
+          await sequelize.query(
+            `INSERT INTO likes_${answerId} (userId) VALUES(${decryptedResult.id})`,
+            {
+              type: QueryTypes.INSERT,
+            }
+          );
+        }
+      }
+      const likes = await sequelize.query(`SELECT * FROM likes_${answerId}`, {
+        type: QueryTypes.SELECT,
+      });
+
+      const likesCount = likes.length;
+      await answers.update(
+        {
+          likes: likesCount,
+        },
+        {
+          where: {
+            id: answerId,
+          },
+        }
+      );
+      console.log(likesCount);
+      socket.emit("likeUpdate", { likesCount, answerId });
+    }
+  });
 });

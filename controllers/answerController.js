@@ -8,7 +8,7 @@ exports.handleAnswer = async(req,res)=>{
     const {answer} = req.body 
     const {id:questionId} = req.params 
    const data =  await answers.create({
-       answer, 
+        answerText : answer, 
         userId, 
         questionId,
     })

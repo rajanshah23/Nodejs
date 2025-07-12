@@ -2,23 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Home</title>
+
+  <!-- Your CSS -->
   <link rel="stylesheet" href="/home.css" />
-  <link rel="stylesheet" href="./navbar.css">
+  <link rel="stylesheet" href="/navbar.css" />
+
+  <!-- Font Awesome for social icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-p6O5Jy+Q0k+rYVEpCUzRpXrzoQhT9lQk/1YV5xJoPv0JdBOcS5lP7KQbfI8R7zHHXcXoTlNfW+3XwCsGo1GkIQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 </head>
 <body>
 
   <%- include("./components/navbar.ejs") %>
-<p style="color:green "><%- success %> </p>
-  <div class="question-list">
-    <% data.forEach(item => { %>
-      <div class="question-card" onclick="window.location.href='/question/<%- item.id %>'">
-        <div class="question-title"><%- item.title %></div>
-        <div class="question-author"><i> Author:  <%= item.user.username %></i></div>
-      </div>
-    <% }) %>
-  </div>
 
+  <% if (success) { %>
+    <p class="flash-success"><%- success %></p>
+  <% } %>
+
+  <!-- Hero Banner -->
+  <section class="hero" role="banner">
+    <div class="hero-content">
+      <h1>Welcome to Our Q&A Platform</h1>
+      <p>Your place to ask questions, share knowledge, and grow together.</p>
+      <a href="/askQuestion" class="btn-primary">Ask a Question</a>
+    </div>
+  </section>
+ <!-- Search Bar -->
+  <section class="search-container" role="search" aria-label="Search questions">
+    <input
+      type="text"
+      id="searchInput"
+      aria-label="Search questions"
+      placeholder="Search questions..."
+      onkeyup="filterQuestions()"
+      autocomplete="off"
+    />
+  </section>
+ 
+  <!-- Stats Section -->
+  <section class="stats" aria-label="Site statistics">
+    <div class="stat-item" tabindex="0">
+      <h2>10K+</h2>
+      <p>Questions Asked</p>
+    </div>
+    <div class="stat-item" tabindex="0">
+      <h2>5K+</h2>
+      <p>Answers Provided</p>
+    </div>
+    <div class="stat-item" tabindex="0">
+      <h2>2K+</h2>
+      <p>Active Users</p>
+    </div>
+  </section>
+
+  <!-- Main question list -->
+  <main class="question-list" aria-live="polite">
+    <% data.forEach(item => { %>
+      <article
+        class="question-card"
+        onclick="window.location.href='/question/<%- item.id %>'"
+        role="button"
+        tabindex="0"
+        onkeypress="if(event.key==='Enter' || event.key===' ') window.location.href='/question/<%- item.id %>'"
+        aria-label="View details for question titled <%- item.title %>"
+      >
+        <h2 class="question-title"><%- item.title %></h2>
+
+        <% if (item.description.length > 200) { %>
+          <p class="question-description"><%- item.description.substring(0, 200) %>...</p>
+        <% } else { %>
+          <p class="question-description"><%- item.description %></p>
+        <% } %>
+
+        <% if (item.image) { %>
+          <img src="<%- item.image %>" alt="Image related to question" class="question-image" />
+        <% } %>
+
+        <div class="question-meta">
+          <i>Author: <strong><%- item.user.username %></strong></i><br />
+          <i>Posted on: <%- new Date(item.createdAt).toLocaleDateString() %></i>
+        </div>
+
+        <a href="/question/<%- item.id %>" class="read-more" aria-label="View details of question titled <%- item.title %>">
+          View Details →
+        </a>
+      </article>
+    <% }) %>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <p>© 2025 Q&A Platform. All rights reserved.</p>
+    <div class="social-icons" aria-label="Social media links">
+      <a href="#" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" aria-label="Twitter" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+      <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </footer>
+
+  <!-- Filter JS -->
+  <script>
+    function filterQuestions() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.question-card');
+      cards.forEach(card => {
+        const title = card.querySelector('.question-title').textContent.toLowerCase();
+        const desc = card.querySelector('.question-description').textContent.toLowerCase();
+        if (title.includes(input) || desc.includes(input)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
 </body>
 </html>

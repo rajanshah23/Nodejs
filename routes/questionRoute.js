@@ -1,13 +1,16 @@
-const { renderAskQuestion, askQuestion,  renderSingleQuestionPage } = require("../controllers/questionController")
-const { isAuthenticated } = require("../middleware/IsAuthenticated")
+const { renderAskQuestionPage, askQuestion, renderSingleQuestionPage  } = require("../controllers/questionController")
+const { isAuthenticated } = require("../middleware/isAuthenticated")
 
-const router=require("express").Router()
-const {multer,storage}=require("../middleware/multerConfig")
-const upload= multer({storage:storage})
+const router = require("express").Router()
+// const upload = multer({storage : storage})
+// const {multer,storage} = require('../middleware/multerConfig')
+// const upload = multer({storage:storage})
+ 
+const {multer,storage}=require("../middleware/multerConfig.js")
+const upload = multer({storage:storage})
 
+ 
+router.route("/askquestion").get(isAuthenticated, renderAskQuestionPage).post(isAuthenticated, upload.single('image'), askQuestion)
+router.route("/question/:id").get(renderSingleQuestionPage)
 
-router.route('/askquestion').get(isAuthenticated,renderAskQuestion).post(isAuthenticated,upload.single('image'),askQuestion)
-router.route('/question/:id').get(renderSingleQuestionPage)
-
-
-module.exports=router
+module.exports = router 
