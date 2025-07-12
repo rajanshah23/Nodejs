@@ -1,6 +1,5 @@
 const { renderAskQuestionPage, askQuestion, renderSingleQuestionPage  } = require("../controllers/questionController")
-const {isAuthenticated}
-= require("../middleware/isAuthenticated.js")
+const { isAuthenticated } = require("../middleware/isAuthenticated");
 const router = require("express").Router()
 // const upload = multer({storage : storage})
 // const {multer,storage} = require('../middleware/multerConfig')
