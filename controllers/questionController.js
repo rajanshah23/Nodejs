@@ -13,16 +13,19 @@ exports.askQuestion = async (req,res)=>{
     
 
     const userId = req.userId 
-    const fileName = req.file.filename
-    const result = await cloudinary.v2.uploader.upload(req.file.path)
-    console.log(result)
+    let imageUrl = null;
+    if (req.file) {
+        const result = await cloudinary.v2.uploader.upload(req.file.path)
+        console.log(result)
+        imageUrl = result.url;
+    }
     if(!title || !description ){
         return res.send("Please provide title, description")
     }
     await questions.create({
         title, 
         description, 
-        image : result.url,
+        image : imageUrl,
         userId
     })
     res.redirect("/")
@@ -82,3 +85,20 @@ let count = 0 ;
     })
     res.render("./questions/singleQuestion",{data,answers:answersData,likes : count})
 }
+
+exports.deleteQuestion = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Delete all answers related to this question
+    await answers.destroy({ where: { questionId: id } });
+
+    // Delete the question
+    await questions.destroy({ where: { id } });
+
+    res.redirect("/");  
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error deleting question");
+  }
+};

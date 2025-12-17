@@ -12,10 +12,20 @@
     <!-- Form -->
     <div class="form-container">
       <form action="/askQuestion" method="post" enctype="multipart/form-data" >
+        <select name="category" required>
+  <option value="">Select Category</option>
+  <option value="web">Web Development</option>
+  <option value="backend">Backend / Node.js</option>
+  <option value="security">Security</option>
+  <option value="ai">AI & Trends</option>
+  <option value="database">Database</option>
+</select>
+
         <input type="text" name="title" placeholder="Enter  your question" required />
         <textarea name="description" placeholder="Description" cols="30" rows="10"  required></textarea>
-        <input type="file" name="image"   required />
+        <input type="file" name="image" accept="image/*" />
         <input type="submit" value="Ask Question" />
+        
       </form>
     </div>
   </body>

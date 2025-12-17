@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
+const methodOverride = require('method-override');
 const { renderHomePage } = require("./controllers/authController");
 const cookieParser = require("cookie-parser");
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const session = require("express-session");
@@ -14,13 +15,13 @@ app.use(express.json()); // client side rendering huda yo use garni(react,vue...
 app.use(cookieParser());
 app.use(
   session({
-    secret: "This is secret for the session",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
 );
 app.use(flash());
-
+app.use(methodOverride('_method'));
 require("./model/index");
 const authRoute = require("./routes/authRoute");
 const questionRoute = require("./routes/questionRoute");
@@ -34,9 +35,10 @@ const { QueryTypes } = require("sequelize");
 app.use(async (req, res, next) => {
   const token = req.cookies.jwtToken;
   try {
-    const verifiedResult = await promisify(jwt.verify)(token, "hahaha");
-    if (isAuthenticated) {
+    const verifiedResult = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    if (verifiedResult) {
       res.locals.isAuthenticated = true; // locals is  a global variable which is used to store the key value
+       res.locals.userId = verifiedResult.id;
     } else {
       res.locals.isAuthenticated = false;
     }
@@ -67,9 +69,10 @@ const io = socketio(server, {
 });
 io.on("connection", (socket) => {
   socket.on("like", async ({ answerId, cookie }) => {
+        try {
     const answer = await answers.findByPk(answerId);
     if (answer && cookie) {
-      const decryptedResult = await promisify(jwt.verify)(cookie, "hahaha");
+      const decryptedResult = await promisify(jwt.verify)(cookie, process.env.JWT_SECRET);
       if (decryptedResult) {
         const user = await sequelize.query(
           `SELECT * FROM likes_${answerId} WHERE userId=${decryptedResult.id}`,
@@ -104,5 +107,13 @@ io.on("connection", (socket) => {
       console.log(likesCount);
       socket.emit("likeUpdate", { likesCount, answerId });
     }
+    } catch (err) {
+      console.error(err);
+    }
   });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
 });

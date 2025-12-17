@@ -1,9 +1,11 @@
+require('dotenv').config(); 
 module.exports = {
-    HOST: "localhost",
-    USER: "root",
-    PASSWORD: "",
-    DB: "Nodejs",
-    dialect: "mysql",  //kun database use garni ho
+    HOST:process.env.DB_HOST,
+    USER: process.env.DB_USER,
+    PASSWORD:process.env.DB_PASSWORD,
+    DB: process.env.DB_NAME,
+    dialect: process.env.DB_DIALECT || "mysql",  //kun database use garni ho
+    PORT: process.env.DB_PORT || 3306,
     pool: {
       max: 5,
       min: 0,
